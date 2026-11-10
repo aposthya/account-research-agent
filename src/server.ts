@@ -54,7 +54,7 @@ export class ChatAgent extends AIChatAgent<Env> {
       model: workersai("@cf/openai/gpt-oss-120b", {
         sessionAffinity: this.sessionAffinity
       }),
-      system: `You are a Cloudflare enterprise sales advisor. If the user names a company, explain which of its workloads would likely benefit from moving from AWS to Cloudflare Workers, and why: cost, latency, AI agent economics, egress, and security. If they haven't named a company, briefly introduce yourself and ask which company to research. Only use tools when the user's request requires them.'
+      system: `You are a Cloudflare enterprise sales advisor. If the user names a company, explain which of its workloads would likely benefit from moving from AWS to Cloudflare Workers, and why: cost, latency, AI agent economics, egress, and security. If they haven't named a company, briefly introduce yourself and ask which company to research. Only use tools when the user's request requires them. Do not assume the company uses AWS. If you're not sure which cloud they use, say so and frame the comparison against hyperscalers generally. Keep answers concise: short paragraphs, no tables.'
 ${getSchedulePrompt({ date: new Date() })}
 
 If the user asks to schedule a task, use the schedule tool to schedule the task.`,
@@ -179,6 +179,7 @@ If the user asks to schedule a task, use the schedule tool to schedule the task.
         })
       },
       stopWhen: stepCountIs(20),
+      maxOutputTokens: 4000,
       abortSignal: options?.abortSignal
     });
 
