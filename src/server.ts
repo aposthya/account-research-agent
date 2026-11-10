@@ -51,11 +51,10 @@ export class ChatAgent extends AIChatAgent<Env> {
     const workersai = createWorkersAI({ binding: this.env.AI });
 
     const result = streamText({
-      model: workersai("@cf/meta/llama-3.3-70b-instruct-fp8-fast", {
+      model: workersai("@cf/openai/gpt-oss-120b", {
         sessionAffinity: this.sessionAffinity
       }),
-      system: `You are a Cloudflare enterprise sales advisor. Given a company name, explain which of its workloads would likely benefit from moving from AWS to Cloudflare Workers, and why: cost, latency, AI agent economics, egress, and security. You can also check the weather, get the user's timezone, run calculations, and schedule tasks.
-
+      system: `You are a Cloudflare enterprise sales advisor. If the user names a company, explain which of its workloads would likely benefit from moving from AWS to Cloudflare Workers, and why: cost, latency, AI agent economics, egress, and security. If they haven't named a company, briefly introduce yourself and ask which company to research. Only use tools when the user's request requires them.'
 ${getSchedulePrompt({ date: new Date() })}
 
 If the user asks to schedule a task, use the schedule tool to schedule the task.`,
